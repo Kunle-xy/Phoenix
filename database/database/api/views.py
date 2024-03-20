@@ -1,5 +1,5 @@
 from .serializers import PlantSerializer, RecordSerializer
-from .models import Plant, Record
+from .models import Plant, Record, CustomUser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -61,3 +61,8 @@ class RecordDeleteView(generics.DestroyAPIView):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class CreateUserAPI(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CreateUserSerializer
+    permission_classes = (AllowAny,)
+createuser = CreateUserAPI.as_view()
