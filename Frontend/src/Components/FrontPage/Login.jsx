@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Dashboard/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,8 @@ const Login = () => {
     e.preventDefault();
 
     // Attempt to log in using your Django backend
+
+
     try {
       const response = await fetch('http://localhost:8000/api/token/', { // Replace with your actual JWT endpoint
         method: 'POST',

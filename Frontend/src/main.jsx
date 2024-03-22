@@ -10,6 +10,7 @@ import Plant, {loader as recordsLoader} from "./Components/Dashboard/Plant";
 import CreateRecord from "./Components/Dashboard/CreateRecord";
 import AI, {loader as recordLoader} from "./Components/Dashboard/AI";
 import RequireAuth from "./Components/Dashboard/authWrapper";
+import { AuthProvider } from "./Components/Dashboard/AuthContext";
 
 
 
@@ -61,6 +62,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <AuthProvider>
     <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

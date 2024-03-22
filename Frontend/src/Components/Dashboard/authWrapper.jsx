@@ -1,18 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 import { Navigate } from 'react-router-dom';
-import isAuthenticated from './auth';
 
 const RequireAuth = ({ children }) => {
-  const [authStatus, setAuthStatus] = useState({ checked: false, isAuthenticated: false });
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const authResult = await isAuthenticated();
-      setAuthStatus({ checked: true, isAuthenticated: authResult });
-    };
-
-    checkAuth();
-  }, []);
+  const { authStatus } = useAuth();
 
   // Before the authentication check completes, you might want to render null or a loading spinner
   if (!authStatus.checked) return null; // or <LoadingSpinner /> for better UX

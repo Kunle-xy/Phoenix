@@ -18,11 +18,19 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 class CreatePlantView(generics.ListCreateAPIView):
-    queryset = Plant.objects.all()
+    # queryset = Plant.objects.all()
     serializer_class = PlantSerializer
 
+    # authentication_classes = []
+    # permission_classes = []
+
+    def get_queryset(self):
+        # print(self.request.user)
+        qs  = Plant.objects.filter(farmer=self.request.user)
+        return qs
+
     def perform_create(self, serializer):
-        serializer.save()   #model instance
+        serializer.save(farmer=self.request.user)   #model instance
         print(serializer.data)
 
 class RecordView(generics.ListCreateAPIView):
@@ -32,7 +40,6 @@ class RecordView(generics.ListCreateAPIView):
     def get_queryset(self):
         qs  = Record.objects.filter(plant=self.kwargs['pk'])
         return qs
-
 
     def perform_create(self, serializer):
         serializer.save()   #model instance

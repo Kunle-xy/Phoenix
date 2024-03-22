@@ -25,41 +25,46 @@ const DashLayout = () => {
 
   const [profileClick, setProfileClick] = useState(false);
   const token = localStorage.getItem('accessToken');
+  // console.log(token);
   let initial = '';
   let name = '';
   let email = '';
   let farmName = '';
   let farmLocation = '';
   let farmSize = '';
+  let farmerID = '';
   // let farmCoords = [];
 
-      if (token) {
-        const payload = jwtDecode(token);
-        try {
+  if (token) {
+    const payload = jwtDecode(token);
+    // console.log(payload);
+    try {
 
-          initial = payload?.first_name[0] + payload?.last_name[0];
-           name = payload?.first_name + ' ' + payload?.last_name;
-           email = payload?.email;
-           farmName = payload?.farmName;
-           farmLocation = payload?.farmLocation;
+      initial = payload?.first_name[0] + payload?.last_name[0];
+      name = payload?.first_name + ' ' + payload?.last_name;
+      email = payload?.email;
+      farmName = payload?.farmName;
+      farmLocation = payload?.farmLocation;
+      farmerID = payload?.user_id;
 
-          //  getCoordinates(farmLocation);
+      //  getCoordinates(farmLocation);
 
-           farmSize = payload?.farmSize;
-        }
-        catch (error) {
-          initial = '?';
-        }
+      farmSize = payload?.farmSize;
+    }
+    catch (error) {
+      initial = '?';
+    }
 
-      }
-      else {
-        console.log('no token');
-      }
+  }
+  else {
+    console.log('no token');
+  }
 
 
   const Init = {
     plantName: '',
     datePlanted: '',
+    farmer: farmerID,
   }
 
   const [formData, setFormData] = useState(Init);
@@ -76,15 +81,19 @@ const DashLayout = () => {
   const Create = (e) => {
     e.preventDefault();
     // console.log(formData);
+    // console.log(token);
     let url = 'http://localhost:8000/api/createplant/';
 
     axios.post(url, formData, {
       headers: {
-        'Content-Type': 'application/json',}
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`}
       }).then(res => {
+        alert('Plant created successfully');
         setPlants([...plants, res.data]);
 
       }).catch(err => {
+        alert('Plant creation failed. Please try again.');
         console.log(err);
       });
 
@@ -94,13 +103,18 @@ const DashLayout = () => {
 
   const Fetch = async () => {
     let url = 'http://localhost:8000/api/createplant/';
+
     axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+      }
     }).then(res => {
       setPlants(res.data);
     }).catch(err => {
+      alert('No plant found. Create a new plant record.');
       console.log(err);
     });
-  }
+  };
 
   return (
     <div className='flex h-screen'>
