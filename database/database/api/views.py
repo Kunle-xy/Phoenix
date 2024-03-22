@@ -1,11 +1,21 @@
-from .serializers import PlantSerializer, RecordSerializer
+from .serializers import PlantSerializer, RecordSerializer, CreateUserSerializer, CustomTokenObtainPairSerializer
 from .models import Plant, Record, CustomUser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+from rest_framework.permissions import AllowAny
+
+
+
 
 from rest_framework import generics
 # Create your views here.
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 class CreatePlantView(generics.ListCreateAPIView):
     queryset = Plant.objects.all()
@@ -65,4 +75,5 @@ class CreateUserAPI(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CreateUserSerializer
     permission_classes = (AllowAny,)
+
 createuser = CreateUserAPI.as_view()

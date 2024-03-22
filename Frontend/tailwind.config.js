@@ -15,6 +15,10 @@ export default {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
       },
+      boxShadow: {
+        "myShadow": '0px 4px 10px rgba(0, 255, 0, 1)',
+        "myShadow2": '0px 4px 10px rgba(0, 255, 255, 1)',
+      },
     },
     screens: {
       xs: "480px",

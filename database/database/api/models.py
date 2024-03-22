@@ -36,6 +36,8 @@ class CustomUser(AbstractUser):
     farmName = models.CharField(max_length=150, blank=True, null=True)
     farmLocation = models.CharField(max_length=150, blank=True, null=True)
     farmSize = models.FloatField(blank=True, null=True)
+    username = models.CharField(max_length=150, unique=False, blank=True, null=True)
+
     # gender = models.SmallIntegerField(choices=GENDER_CHOICES)
 
     USERNAME_FIELD = 'email'
@@ -47,6 +49,7 @@ class Plant (models.Model):
     plantName = models.CharField(max_length=50)
     datePlanted = models.DateField()
     created = models.DateTimeField(auto_now_add=True, null=True)
+    farmer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.plantName

@@ -9,6 +9,7 @@ import DashLayout from "./Components/Dashboard/DashLayout";
 import Plant, {loader as recordsLoader} from "./Components/Dashboard/Plant";
 import CreateRecord from "./Components/Dashboard/CreateRecord";
 import AI, {loader as recordLoader} from "./Components/Dashboard/AI";
+import RequireAuth from "./Components/Dashboard/authWrapper";
 
 
 
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashLayout />,
+    element:
+    <RequireAuth>
+     <DashLayout />
+    </RequireAuth>
+     ,
     children: [
       {
         path: "plants/:plantId/*",
