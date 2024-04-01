@@ -35,12 +35,12 @@ class CreatePlantView(generics.ListCreateAPIView):
 
 class RecordView(generics.ListCreateAPIView):
     serializer_class = RecordSerializer
-    queryset = Record.objects.all()
-    permission_classes = []
-    authentication_classes = []
+    # queryset = Record.objects.all()
+    # permission_classes = []
+    # authentication_classes = []
 
     def get_queryset(self):
-        qs  = Record.objects.filter(plant=self.kwargs['pk'])
+        qs  = Record.objects.filter(plant__farmer=self.request.user, plant__id=self.kwargs['pk'])
         return qs
 
     def perform_create(self, serializer):

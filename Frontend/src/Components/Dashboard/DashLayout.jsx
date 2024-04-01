@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import { IoLogOutSharp } from "react-icons/io5";
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Fetch, createPlant } from '.';
+import { AiFillWechat } from "react-icons/ai";
 
 
 const DashLayout = () => {
@@ -197,7 +198,7 @@ const DashLayout = () => {
         {/* <IoLogOutSharp color='black' size={35}/> */}
         <Link to="/" className="flex items-center gap-2 group text-red-900">
           <IoLogOutSharp color='red' size={35} className="transition-all duration-300 ease-in-out" />
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out absolute mt-10 ">
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out absolute -mt-10 ">
             Logout
           </span>
         </Link>
@@ -236,6 +237,10 @@ const DashLayout = () => {
         </MapContainer> */}
 
       </section>
+
+      <Link className='absolute right-10 bottom-10 shadow-myShadow2 rounded-full'>
+        <AiFillWechat  size={70} color='green'/>
+      </Link>
 
 
       <div>

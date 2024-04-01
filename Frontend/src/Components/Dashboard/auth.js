@@ -18,6 +18,8 @@ const requestNewAccessToken = async (refreshToken) => {
   };
 
 
+
+  // ADD TOKEN TOI THE RETURN
 const isAuthenticated = async () => {
     let accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
