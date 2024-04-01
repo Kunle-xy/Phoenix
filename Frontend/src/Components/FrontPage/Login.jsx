@@ -1,47 +1,64 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Dashboard/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // For redirecting after login
+  const navigate = useNavigate();
+  const { checkAuth } = useAuth(); // Assuming checkAuth is correctly implemented
+
+  // useEffect(() => {
+  //   const verifySession = async () => {
+  //     const isAuthenticated = await checkAuth();
+  //     if (isAuthenticated) {
+  //       navigate('/dashboard');
+  //     }
+  //   };
+
+  //   verifySession();
+  // }, [checkAuth, navigate]);
+  // const session = checkAuth();
+  // if (session) {
+  //   navigate('/dashboard');
+  // }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Attempt to log in using your Django backen
+      try {
+        const response = await fetch('http://localhost:8000/api/token/', { // Replace with your actual JWT endpoint
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
 
-    // Attempt to log in using your Django backend
+        const data = await response.json();
 
+        if (response.ok) {
 
-    try {
-      const response = await fetch('http://localhost:8000/api/token/', { // Replace with your actual JWT endpoint
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+          // If login was successful, store the JWT token in localStorage or sessionStorage
+          localStorage.setItem('accessToken', data.access); // Storing the access token
+          localStorage.setItem('refreshToken', data.refresh); // Storing the refresh token if you have one
 
-      const data = await response.json();
-
-      if (response.ok) {
-
-        // If login was successful, store the JWT token in localStorage or sessionStorage
-        localStorage.setItem('accessToken', data.access); // Storing the access token
-        localStorage.setItem('refreshToken', data.refresh); // Storing the refresh token if you have one
-
-        // Redirect to a protected route, like a dashboard or home page
-        navigate('/dashboard'); // Change '/dashboard' to the route you want to redirect after login
-      } else {
-        // If there was a problem, handle it here
-        alert('Login failed: ' + (data.detail || 'Please check your credentials and try again.'));
+          checkAuth(); // Assuming checkAuth is implemented to update the auth status
+          // Redirect to a protected route, like a dashboard or home page
+          navigate('/dashboard'); // Change '/dashboard' to the route you want to redirect after login
+        } else {
+          // If there was a problem, handle it here
+          alert('Login failed: ' + (data.detail || 'Please check your credentials and try again.'));
+        }
+      } catch (error) {
+        // If there was an error with the fetch request itself, handle it here
+        console.error('There was an error with the login request:', error);
+        alert('An error occurred while logging in. Please try again later.');
       }
-    } catch (error) {
-      // If there was an error with the fetch request itself, handle it here
-      console.error('There was an error with the login request:', error);
-      alert('An error occurred while logging in. Please try again later.');
-    }
-  };
+
+    };
+
+
 
   return (
     <form onSubmit={handleSubmit} className='flex flex-col space-y-5 font-semibold text-sm'>

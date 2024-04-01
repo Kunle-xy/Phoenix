@@ -33,6 +33,7 @@ const DashLayout = () => {
   let farmLocation = '';
   let farmSize = '';
   let farmerID = '';
+  let picture = '';
   // let farmCoords = [];
 
   if (token) {
@@ -46,6 +47,8 @@ const DashLayout = () => {
       farmName = payload?.farmName;
       farmLocation = payload?.farmLocation;
       farmerID = payload?.user_id;
+      picture = payload?.profileImg;
+
 
       //  getCoordinates(farmLocation);
 
@@ -169,21 +172,23 @@ const DashLayout = () => {
       hover:shadow-myShadow absolute right-0 h-10 m-5 w-10 rounded-full bg-black text-white'>
             {initial.length > 0 && initial}
       </button>
-      <section id='profile' className={`${profileClick ? 'flex flex-col' : 'hidden'} absolute top-20 right-0 bg-green-600 p-5
+      <section id='profile' className={`${profileClick ? 'flex flex-col' : 'hidden'} absolute top-20 right-0 bg-black p-5
       m-5 rounded-xl w-[500px] text-white shadow-myShadow2`}>
         <div className='flex flex-row justify-center items-center gap-5'>
-          <img src='https://via.placeholder.com/150' alt="profile" className='rounded-full h-32 w-32 self-start' />
+          <img src='https://via.placeholder.com/150'
+          alt="profile" className='rounded-full h-32 w-32 self-start' />
           <div className='flex flex-col'>
-            <p className='text-xl font-bold'>Name</p>
-            <p>{name}</p>
-            <p className='text-lg font-semibold'>Email</p>
-            <p>{email}</p>
-            <p className='text-lg font-semibold'>Farm Name</p>
-            <p>{farmName}</p>
-            <p className='text-lg font-semibold'>Farm Location</p>
-            <p>{farmLocation}</p>
-            <p className='text-lg font-semibold'>Farm Size</p>
-            <p>{farmSize} km2</p>
+            <p className='text-xl '>Name</p>
+            <p className='font-bold'>{name}</p>
+            <p className='text-lg '>Email</p>
+            <p className='font-bold'>{email}</p>
+            <p className='text-lg '>Farm Name</p>
+            <p className='font-bold'>{farmName}</p>
+            <p className='text-lg '>Farm Location</p>
+            <p className='font-bold'>{farmLocation}</p>
+            <p className='text-lg '>Farm Size</p>
+            <p className='font-bold'>{farmSize} km2</p>
+            {/* <p>{farmerID}</p> */}
           </div>
         </div>
         {/* <MapContainer center={farmCoords} zoom={13} scrollWheelZoom={false} style={{ height: '200px', width: '100%' }}>

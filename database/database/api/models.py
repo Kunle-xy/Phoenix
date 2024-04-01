@@ -37,7 +37,7 @@ class CustomUser(AbstractUser):
     farmLocation = models.CharField(max_length=150, blank=True, null=True)
     farmSize = models.FloatField(blank=True, null=True)
     username = models.CharField(max_length=150, unique=False, blank=True, null=True)
-
+    profileImg = models.ImageField(upload_to='profile_pics', default='default.jpg')
     # gender = models.SmallIntegerField(choices=GENDER_CHOICES)
 
     USERNAME_FIELD = 'email'
@@ -69,3 +69,13 @@ class Record (models.Model):
 
     def __str__(self):
         return str(self.plant) + ' - ' + str(self.date)
+
+#users profile picture
+
+
+# class Profile(models.Model):
+#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+#     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+#     def __str__(self):
+#         return f'{self.user.email} Profile'

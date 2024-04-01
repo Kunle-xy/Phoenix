@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 const Signup = () => {
+
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+
+  const Init = {
     email: '',
     first_name: '',
     last_name: '',
@@ -13,14 +17,17 @@ const Signup = () => {
     farmSize: '',
     password: '',
     password_confirm: '',
+    profileImg: '',
 
-  });
+  }
+
+  const [formData, setFormData] = useState(Init);
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
+    const { id, value, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [id]: value,
+      [id]: files ? files[0] : value,
     }));
   };
 
@@ -32,30 +39,23 @@ const Signup = () => {
       alert("Passwords don't match.");
       return;
     }
+    console.log(formData);
 
-    try {
-      const response = await fetch('http://127.0.0.1:8000/api/createuser/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+    axios.post('http://127.0.0.1:8000/api/createuser/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',}
+      }).then(res => {
+        alert('Signup successful! You can now log in.');
+        navigate('/login');
+        console.log(res.data);
+
+      }).catch(err => {
+        console.error('There was a problem with the fetch operation:', err);
+        console.log(err);
       });
 
-      if (!response.ok) {
-        alert('Signup failed. Please try again. (Also check if email is already in use)');
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // const result = await response.json();
-      alert('Signup successful! You can now log in.');
-      navigate('/login');
-      // Further actions on successful signup (e.g., redirect to login)
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
+    setFormData(Init);
   };
-
   return (
     <form className=' flex flex-col space-y-5 font-semibold text-sm' onSubmit={handleSubmit}>
       <div className='flex  space-x-3'>
@@ -99,6 +99,13 @@ const Signup = () => {
           <input type="password" className='h-10 w-60 rounded-xl border-2 border-gray-300 p-3 font-normal' onChange={handleChange}
           id='password_confirm'
           required/>
+          <label htmlFor="profileImg" className='pr-5'>Profile Image:</label>
+         <input type="file" accept="image/png, image/jpeg, image/jpg"
+         className='h-10 w-60 rounded-xl border-2 border-gray-300 p-3 font-normal'
+          onChange={handleChange}
+          id='profileImg'
+          required/>
+
         </div>
 
       </div>

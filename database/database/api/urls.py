@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('createuser/', views.createuser, name= 'user_create'),
+    path('user/', views.ListUserAPI.as_view(), name= 'user'),
     path('createplant/', views.CreatePlantView.as_view(), name= 'plant_create'),
     path('record/<int:pk>/', views.RecordView.as_view(), name= 'record'),
     path('plant/<int:pk>/', views.RetrievePlantView.as_view(), name= 'plant'),

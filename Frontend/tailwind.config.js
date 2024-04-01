@@ -17,7 +17,7 @@ export default {
       },
       boxShadow: {
         "myShadow": '0px 4px 10px rgba(0, 255, 0, 1)',
-        "myShadow2": '0px 4px 10px rgba(0, 255, 255, 1)',
+        "myShadow2": '0px 4px 20px rgba(0, 0, 0, 1)',
       },
     },
     screens: {

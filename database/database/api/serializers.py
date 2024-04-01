@@ -13,12 +13,19 @@ class RecordSerializer(serializers.ModelSerializer):
         model = Record
         fields = ['id', 'plantName', 'date', 'height', 'temperature', 'humidity', 'soilMoisture', 'image', 'plant']
 
+
+#user serializer
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'first_name', 'last_name', 'farmName', 'farmLocation', 'farmSize', 'profileImg']
 class CreateUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password_confirm = serializers.CharField(write_only=True, required=True)
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'password', 'password_confirm', 'first_name', 'last_name', 'farmName', 'farmLocation', 'farmSize']
+        fields = ['id', 'email', 'password', 'password_confirm', 'first_name', 'last_name',\
+                   'farmName', 'farmLocation', 'farmSize', 'profileImg']
 
     def validate(self, data):
         email = data.get('email', '').strip().lower()
@@ -54,6 +61,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['farmName'] = user.farmName
         token['farmLocation'] = user.farmLocation
         token['farmSize'] = user.farmSize
+        token['profileImg'] = user.profileImg.url
 
         # token['text'] = user
         # Add more custom claims as needed

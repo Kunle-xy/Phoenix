@@ -1,4 +1,4 @@
-from .serializers import PlantSerializer, RecordSerializer, CreateUserSerializer, CustomTokenObtainPairSerializer
+from .serializers import PlantSerializer, RecordSerializer,CreateUserSerializer, CustomTokenObtainPairSerializer, UserSerializer
 from .models import Plant, Record, CustomUser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -36,6 +36,8 @@ class CreatePlantView(generics.ListCreateAPIView):
 class RecordView(generics.ListCreateAPIView):
     serializer_class = RecordSerializer
     queryset = Record.objects.all()
+    permission_classes = []
+    authentication_classes = []
 
     def get_queryset(self):
         qs  = Record.objects.filter(plant=self.kwargs['pk'])
@@ -84,3 +86,12 @@ class CreateUserAPI(generics.CreateAPIView):
     permission_classes = (AllowAny,)
 
 createuser = CreateUserAPI.as_view()
+
+#listuser
+class ListUserAPI(generics.ListAPIView):
+    serializer_class =  UserSerializer
+    # permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        qs = CustomUser.objects.filter(email=self.request.user.email)
+        return qs
