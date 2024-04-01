@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
 export async function getRecords(plantId) {
         try {
@@ -9,6 +10,11 @@ export async function getRecords(plantId) {
           console.error('Error fetching data:', error);
         }
 }
+
+// const allRecords = () => {
+//     const { data, isLoading, isError, error } = useQuery('records', getRecords);
+//     return { data, isLoading, isError, error };
+// }
 
 export async function getRecord(plantId, recordId) {
     try {

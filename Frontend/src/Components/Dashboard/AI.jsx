@@ -7,19 +7,19 @@ import { Data } from ".";
 export async function loader(plantsId, recordId) {
     const record = await getRecord( plantsId, recordId);
 
-            return { record,};
+            return { record };
         }
 
 const AI = () => {
-    const { record, response} = useLoaderData();
+    const { record } = useLoaderData();
     const image = Data.find(data => data.id === record.id)
-    console.log(image);
+    console.log(record);
 
   return (
     <div className=" h-[800px] overflow-y-auto text-black flex flex-col space-y-1 bg-gray-300 w-[500px] font-bold m-10 shadow-[50px] rounded-[50px] p-10 ">
             <img src={record.image} alt="" className="rounded-xl w-[400px] h-[300px] self-center" />
             <p className="self-center text-xl">Pie Chart:</p>
-            <img src={image.image} alt="" className="rounded-xl w-[400px] h-[400px] self-center object-contain" />
+         <img src={image.image} alt="" className="rounded-xl w-[400px] h-[400px] self-center object-contain" />
             <p className="self-center text-xl">Recommendations</p>
            <p>
         The presence of leaf blight in maize, especially under conditions of high temperature and humidity, can be challenging for farmers. Leaf blight is a fungal disease that can significantly affect the yield and quality of maize crops. Here are some actionable steps a farmer can take to manage and control leaf blight:

@@ -14,7 +14,5 @@ urlpatterns = [
     path('record/<int:first_pk>/<int:second_pk>/', views.RetrieveRecordView.as_view(), name= 'recordPick'),
     path('token/',  views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
     # path('record/delete/<int:pk>/', views.RecordDeleteView.as_view(), name= 'record_delete'),
-
 ]

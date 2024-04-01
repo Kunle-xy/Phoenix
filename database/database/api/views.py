@@ -50,6 +50,8 @@ class RecordView(generics.ListCreateAPIView):
 class RetrieveRecordView(generics.RetrieveAPIView):
     serializer_class = RecordSerializer
     # queryset = Record.objects.all()
+    permission_classes = []
+    authentication_classes = []
 
     def get_object(self, ):
         id = self.kwargs['second_pk']

@@ -11,11 +11,12 @@ import CreateRecord from "./Components/Dashboard/CreateRecord";
 import AI, {loader as recordLoader} from "./Components/Dashboard/AI";
 import RequireAuth from "./Components/Dashboard/authWrapper";
 import { AuthProvider } from "./Components/Dashboard/AuthContext";
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 
 
 
-
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
@@ -63,7 +64,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
+    <QueryClientProvider client={queryClient}>
     <RouterProvider router={router} />
+    </QueryClientProvider>
     </AuthProvider>
   </React.StrictMode>
 );

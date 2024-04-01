@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { IoLogOutSharp } from "react-icons/io5";
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { Fetch, createPlant } from '.';
 
 
 const DashLayout = () => {
@@ -25,6 +28,7 @@ const DashLayout = () => {
 
   const [profileClick, setProfileClick] = useState(false);
   const token = localStorage.getItem('accessToken');
+
   // console.log(token);
   let initial = '';
   let name = '';
@@ -33,7 +37,7 @@ const DashLayout = () => {
   let farmLocation = '';
   let farmSize = '';
   let farmerID = '';
-  let picture = '';
+  // let picture = '';
   // let farmCoords = [];
 
   if (token) {
@@ -47,7 +51,7 @@ const DashLayout = () => {
       farmName = payload?.farmName;
       farmLocation = payload?.farmLocation;
       farmerID = payload?.user_id;
-      picture = payload?.profileImg;
+      // picture = payload?.profileImg;
 
 
       //  getCoordinates(farmLocation);
@@ -71,7 +75,17 @@ const DashLayout = () => {
   }
 
   const [formData, setFormData] = useState(Init);
-  const [plants, setPlants] = useState([]);
+  // const [plants, setPlants] = useState([]);
+  const [fetchClick, setFetchClick] = useState(false);
+
+  // const [shouldFetch, setShouldFetch] = useState(false);
+  const { data:plants, error, isLoading, isError } = useQuery(
+    ['plants', { token }],
+    Fetch,
+    {
+      enabled: fetchClick // The query will run when this value is true
+    }
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,50 +95,38 @@ const DashLayout = () => {
     }));
   };
 
-  const Create = (e) => {
-    e.preventDefault();
-    // console.log(formData);
-    // console.log(token);
-    let url = 'http://localhost:8000/api/createplant/';
 
-    axios.post(url, formData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`}
-      }).then(res => {
-        alert('Plant created successfully');
-        setPlants([...plants, res.data]);
-
-      }).catch(err => {
-        alert('Plant creation failed. Please try again.');
-        console.log(err);
+  // CREATES A NEW PLANT RECORD
+  const queryClient = useQueryClient(); // Used for updating the cache
+  const { mutate } = useMutation(createPlant, {
+    onSuccess: (data) => {
+      // Update your local state or query cache as needed
+      queryClient.setQueryData('plants', (oldQueryData) => {
+        return  [...(oldQueryData || []), data];
       });
-
-    setFormData(Init);
-
+      alert('Plant created successfully');
+      // Reset form state or perform additional actions on success
+      setFormData(Init);
+    },
+    onError: (error) => {
+      // Handle errors
+      alert('Plant creation failed. Please try again.');
+      console.error(error);
+      setFormData(Init);
+    },
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({ formData, token });
   };
 
-  const Fetch = async () => {
-    let url = 'http://localhost:8000/api/createplant/';
-
-    axios.get(url, {
-      headers: {
-        'Authorization': `Bearer ${token}` // Include the token in the Authorization header
-      }
-    }).then(res => {
-      setPlants(res.data);
-    }).catch(err => {
-      alert('No plant found. Create a new plant record.');
-      console.log(err);
-    });
-  };
 
   return (
     <div className='flex h-screen'>
       <div className='w-1/4  flex flex-col' >
         <div id='create-plant-form' className='p-5 flex justify-center'>
 
-          <form onSubmit={Create} method='POST' className='p-5 font-semibold text-black rounded-xl text-lg bg-gray-300 flex flex-col justify-center items-start space-y-2 w-3full'>
+          <form onSubmit={handleSubmit} method='POST' className='p-5 font-semibold text-black rounded-xl text-lg bg-gray-300 flex flex-col justify-center items-start space-y-2 w-3full'>
             <label htmlFor="" >Plant Name:
             <input className='text-black pl-2 mx-3 font-normal' type="text" name='plantName' value={formData.plantName} onChange={handleChange}
              placeholder='maize'required/>
@@ -136,16 +138,21 @@ const DashLayout = () => {
             </label>
             <div className='flex gap-10 pt-5 text-white justify-between items-center'>
               <button type='submit' className='bg-green-500 text-sm p-2 rounded-xl'>add new plant</button>
-              <button type='button' onClick={Fetch} className='bg-green-500 text-sm p-2 rounded-xl'> database</button>
+              <button type='button' onClick={() => setFetchClick(prev => !prev)}
+                 className='bg-green-500 text-sm p-2 rounded-xl'> database</button>
             </div>
           </form>
         </div>
 
         <p className="shadow-xl p-2"></p>
 
-        <section></section>
 
-        {plants.length > 0 && <div className='p-5 space-y-5 bg-white m-4 my-1 rounded-xl h-[800px] overflow-y-auto'>
+       {isLoading ? (
+          <div className='p-5 bg-white m-4 my-1 rounded-xl h-[800px]'>
+            <p className='text-center text-xl font-bold'>Fetching plants...</p>
+          </div>):
+         (plants &&
+         <div className='p-5 space-y-5 bg-white m-4 my-1 rounded-xl h-[800px] overflow-y-auto'>
           {plants.map((plant, index) => (
             <div key={index} className='p-4 text-white rounded-xl text-sm bg-green-700 flex justify-between shadow-xl '>
               <div className='text-yellow-300 flex flex-col justify-between items-start gap-2'>
@@ -164,14 +171,39 @@ const DashLayout = () => {
               </div>
             </div>
           ))}
+        </div>)}
 
-        </div>}
+        {
+          isError && <div className='p-5 bg-white m-4 my-1 rounded-xl h-[800px]'>
+            <p className='text-center text-xl font-bold'>Error fetching plants. Please try again.</p>
+          </div>
+        }
+        {
+          plants && plants.length===0 && <div className='p-5 bg-white m-4 my-1 rounded-xl h-[800px]'>
+            <p className='text-center text-xl font-bold'>No plants found. Create a new plant record.</p>
+          </div>
+        }
+
       </div>
+
+
       <p className="shadow-xl p-2"></p>
-      <button onClick={() => setProfileClick(prev => !prev)} className='flex items-center justify-center hover:bg-white hover:text-black
-      hover:shadow-myShadow absolute right-0 h-10 m-5 w-10 rounded-full bg-black text-white'>
-            {initial.length > 0 && initial}
-      </button>
+
+      <div className='flex absolute right-10 justify-center items-center '>
+        <button onClick={() => setProfileClick(prev => !prev)} className='flex items-center justify-center hover:bg-white hover:text-black
+        hover:shadow-myShadow h-10 m-5 w-10 rounded-full bg-black text-white'>
+              {initial.length > 0 && initial}
+        </button>
+        {/* <IoLogOutSharp color='black' size={35}/> */}
+        <Link to="/" className="flex items-center gap-2 group text-red-900">
+          <IoLogOutSharp color='red' size={35} className="transition-all duration-300 ease-in-out" />
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out absolute mt-10 ">
+            Logout
+          </span>
+        </Link>
+
+      </div>
+
       <section id='profile' className={`${profileClick ? 'flex flex-col' : 'hidden'} absolute top-20 right-0 bg-black p-5
       m-5 rounded-xl w-[500px] text-white shadow-myShadow2`}>
         <div className='flex flex-row justify-center items-center gap-5'>

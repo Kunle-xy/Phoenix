@@ -1,6 +1,7 @@
 import {  useLoaderData } from 'react-router-dom'
 import { Outlet, NavLink } from 'react-router-dom'
 import { getRecords } from './Loader';
+
 // import image5 from '/assets/farmer/farmer5.jpg';
 // import image6 from '/assets/farmer/farmer6.jpg';
 // import image4 from '/assets/farmer/farmer4.jpg';
@@ -43,10 +44,9 @@ const Plant = () => {
                 </div>
             </div>
         ))}
+
         </div>
-
-        <Outlet />
-
+            <Outlet />
         </div>
 
   )
