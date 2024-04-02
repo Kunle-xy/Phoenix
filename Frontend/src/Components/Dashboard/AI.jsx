@@ -1,16 +1,27 @@
-import { useQuery } from "react-query";
+import {  useQuery, useQueryClient } from "react-query";
 import { Data, getRecord } from ".";
 import { useAuth } from "./AuthContext";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 
 const AI = () => {
         const { authStatus } = useAuth();
         let { plantId, recordId } = useParams();
+        const queryClient = useQueryClient();
 
         const { data: record, isLoading, error } = useQuery(['record', plantId, recordId], () => getRecord(plantId, recordId, authStatus.token), {
         enabled: !!plantId && !!recordId && !!authStatus.token // Only fetch if all IDs and token are available
         });
+        useEffect(() => {
+                return () => {
+                    // Remove or invalidate the query cache when the component unmounts
+                    queryClient.removeQueries(['record', plantId, recordId]);
+
+                    // Or if you prefer to invalidate (mark as stale) the cache
+                    // queryClient.invalidateQueries(['record', plantId, recordId]);
+                };
+            }, [plantId, recordId, queryClient]);
 
         if (isLoading) return <div>Loading...</div>;
         if (error) return <div>Error: {error.message}</div>;

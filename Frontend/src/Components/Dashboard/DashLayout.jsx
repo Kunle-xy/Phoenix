@@ -115,7 +115,7 @@ const DashLayout = () => {
       // Handle errors
       alert('Plant creation failed. Please try again.');
       console.error(error);
-      setFormData(Init);
+      // setFormData(Init);
     },
   });
   const handleSubmit = (e) => {

@@ -4,6 +4,7 @@ import image_12_13 from '/assets/farmer/plots/12_13.png'
 import image_12_14 from '/assets/farmer/plots/12_14.png'
 import image_23_15 from '/assets/farmer/plots/23_15.png'
 import image_24_16 from '/assets/farmer/plots/24_16.png'
+// import image_25_17 from '/assets/farmer/plots/25_17.png'
 import axios from 'axios'
 
 
@@ -30,12 +31,12 @@ export const Data = [
 
     },
     {
-        id: 5,
+        id: 9,
         image: image_23_15,
 
     },
     {
-        id: 6,
+        id: 10,
         image: image_24_16,
 
     },

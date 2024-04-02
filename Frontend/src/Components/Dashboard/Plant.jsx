@@ -2,8 +2,9 @@ import {  useParams } from 'react-router-dom'
 import { Outlet, NavLink } from 'react-router-dom'
 // import { getRecords } from './Loader';
 import { useAuth } from './AuthContext';
-import { useQuery } from 'react-query';
+import {  useQuery, useQueryClient } from 'react-query';
 import { getRecords } from '.';
+import { useEffect } from 'react';
 
 
 
@@ -11,11 +12,24 @@ const Plant = () => {
     // const { records } = useLoaderData();
     const { authStatus } = useAuth();
     let plantId = useParams().plantId;
+    const queryClient = useQueryClient();
 
     const { data:records, isLoading } = useQuery(['records', plantId], () => getRecords(plantId, authStatus.token), {
         // Optional: React Query settings such as refetch intervals, stale time, etc.
         enabled: !!authStatus.token // Only run query if token exists
     });
+
+    useEffect(() => {
+        return () => {
+            // This function is called when the component unmounts
+            // Here you can either remove the query data from the cache or invalidate it
+            // To remove the query data
+            queryClient.removeQueries(['records', plantId]);
+
+            // Alternatively, to invalidate the query and refetch it later if needed
+            // queryClient.invalidateQueries(['records', plantId]);
+        };
+    }, [plantId, queryClient]);
 
     // Loading indicator
     if (isLoading) {
