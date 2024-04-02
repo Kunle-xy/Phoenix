@@ -5,26 +5,29 @@ import { useAuth } from './AuthContext';
 import { useQuery } from 'react-query';
 import { getRecords } from '.';
 
-// import image5 from '/assets/farmer/farmer5.jpg';
-// import image6 from '/assets/farmer/farmer6.jpg';
-// import image4 from '/assets/farmer/farmer4.jpg';
 
-// export async function loader(id) {
-//     const records = await getRecords(id);
-//     return { records };
-//   }
 
 const Plant = () => {
     // const { records } = useLoaderData();
     const { authStatus } = useAuth();
     let plantId = useParams().plantId;
 
-
-    const { data:records } = useQuery(['records', plantId], () => getRecords(plantId, authStatus.token), {
+    const { data:records, isLoading } = useQuery(['records', plantId], () => getRecords(plantId, authStatus.token), {
         // Optional: React Query settings such as refetch intervals, stale time, etc.
         enabled: !!authStatus.token // Only run query if token exists
     });
 
+    // Loading indicator
+    if (isLoading) {
+        return <div className="flex justify-center items-center">
+            Loading... {/* Update the src attribute to the path of your loading GIF */}
+        </div>;
+    }
+
+    // Display when there are no records
+    if (!records || records.length === 0) {
+        return <div className="text-center font-semibold">No record for selected plant</div>;
+    }
 
   return (
 

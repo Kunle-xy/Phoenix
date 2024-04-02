@@ -1,19 +1,20 @@
-import { useLoaderData } from "react-router-dom";
-import { getRecord } from "./Loader";
-import { Data } from ".";
+import { useQuery } from "react-query";
+import { Data, getRecord } from ".";
+import { useAuth } from "./AuthContext";
+import { useParams } from "react-router-dom";
 
-
-
-export async function loader(plantsId, recordId) {
-    const record = await getRecord( plantsId, recordId);
-
-            return { record };
-        }
 
 const AI = () => {
-    const { record } = useLoaderData();
-    const image = Data.find(data => data.id === record.id)
-    console.log(record);
+        const { authStatus } = useAuth();
+        let { plantId, recordId } = useParams();
+
+        const { data: record, isLoading, error } = useQuery(['record', plantId, recordId], () => getRecord(plantId, recordId, authStatus.token), {
+        enabled: !!plantId && !!recordId && !!authStatus.token // Only fetch if all IDs and token are available
+        });
+
+        if (isLoading) return <div>Loading...</div>;
+        if (error) return <div>Error: {error.message}</div>;
+        const image = Data.find(data => data.id === record.id)
 
   return (
     <div className=" h-[800px] overflow-y-auto text-black flex flex-col space-y-1 bg-gray-300 w-[500px] font-bold m-10 shadow-[50px] rounded-[50px] p-10 ">

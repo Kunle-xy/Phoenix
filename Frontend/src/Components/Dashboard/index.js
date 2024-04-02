@@ -9,23 +9,23 @@ import axios from 'axios'
 
 export const Data = [
     {
-        id: 1,
+        id: 4,
         image: image_12_11,
 
 
     },
     {
-        id: 2,
+        id: 6,
         image: image_12_12,
 
     },
     {
-        id: 3,
+        id: 7,
         image: image_12_13,
 
     },
     {
-        id: 4,
+        id: 8,
         image: image_12_14,
 
     },
@@ -63,8 +63,6 @@ export const createPlant = async ({ formData, token }) => {
     return response.data;
   };
 
-
-
 export async function getRecords(plantId, token) { // Token is passed as an argument
       const response = await axios.get(`http://127.0.0.1:8000/api/record/${plantId}/`, {
           headers: {
@@ -73,6 +71,18 @@ export async function getRecords(plantId, token) { // Token is passed as an argu
       });
 
       return response.data;
+}
+
+export async function getRecord(plantId, recordId, token) {
+    const response = await axios.get(`http://127.0.0.1:8000/api/record/${plantId}/${recordId}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    // console.log(response.data);
+    return response.data;
+
 }
 
 

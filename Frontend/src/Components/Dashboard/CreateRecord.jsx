@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 import { useParams } from 'react-router-dom'
+import { useAuth } from "./AuthContext";
 
 
 
 const CreateRecord = () => {
   const { plantId } = useParams();
   const [success, setSuccess] = useState(false);
+  const { authStatus } = useAuth();
 
 
   const Init = {
@@ -32,24 +34,28 @@ const CreateRecord = () => {
 
   const Create = async (e) => {
     e.preventDefault();
-    let url = `http://127.0.0.1:8000/api/record/${plantId}/`;
+    const url = `http://127.0.0.1:8000/api/record/${plantId}/`;
 
-    // console.log(formData);
+    try {
+        const response = await axios.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${authStatus.token}`
+            }
+        });
 
-    axios.post(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',}
-      }).then(res => {
+        // Handle success
         setSuccess(true);
-        console.log(res.data);
+        console.log(response.data);
+    } catch (err) {
+        // Handle error
+        console.error(err);
+    } finally {
+        // Reset formData after posting (success or fail)
+        setFormData(Init);
+    }
+};
 
-      }).catch(err => {
-        console.log(err);
-      });
-
-    setFormData(Init);
-
-  };
 
   return (
     <div className="">

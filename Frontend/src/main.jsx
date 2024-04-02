@@ -8,7 +8,7 @@ import "./index.css";
 import DashLayout from "./Components/Dashboard/DashLayout";
 import Plant from "./Components/Dashboard/Plant";
 import CreateRecord from "./Components/Dashboard/CreateRecord";
-import AI, {loader as recordLoader} from "./Components/Dashboard/AI";
+import AI from "./Components/Dashboard/AI";
 import RequireAuth from "./Components/Dashboard/authWrapper";
 import { AuthProvider } from "./Components/Dashboard/AuthContext";
 import { QueryClient, QueryClientProvider } from 'react-query';
