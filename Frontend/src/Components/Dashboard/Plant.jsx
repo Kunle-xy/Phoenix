@@ -1,18 +1,29 @@
-import {  useLoaderData } from 'react-router-dom'
+import {  useParams } from 'react-router-dom'
 import { Outlet, NavLink } from 'react-router-dom'
-import { getRecords } from './Loader';
+// import { getRecords } from './Loader';
+import { useAuth } from './AuthContext';
+import { useQuery } from 'react-query';
+import { getRecords } from '.';
 
 // import image5 from '/assets/farmer/farmer5.jpg';
 // import image6 from '/assets/farmer/farmer6.jpg';
 // import image4 from '/assets/farmer/farmer4.jpg';
 
-export async function loader(id) {
-    const records = await getRecords(id);
-    return { records };
-  }
+// export async function loader(id) {
+//     const records = await getRecords(id);
+//     return { records };
+//   }
 
 const Plant = () => {
-    const { records } = useLoaderData();
+    // const { records } = useLoaderData();
+    const { authStatus } = useAuth();
+    let plantId = useParams().plantId;
+
+
+    const { data:records } = useQuery(['records', plantId], () => getRecords(plantId, authStatus.token), {
+        // Optional: React Query settings such as refetch intervals, stale time, etc.
+        enabled: !!authStatus.token // Only run query if token exists
+    });
 
 
   return (

@@ -6,7 +6,7 @@ import Login from "./Components/FrontPage/Login";
 import Signup from "./Components/FrontPage/Signup";
 import "./index.css";
 import DashLayout from "./Components/Dashboard/DashLayout";
-import Plant, {loader as recordsLoader} from "./Components/Dashboard/Plant";
+import Plant from "./Components/Dashboard/Plant";
 import CreateRecord from "./Components/Dashboard/CreateRecord";
 import AI, {loader as recordLoader} from "./Components/Dashboard/AI";
 import RequireAuth from "./Components/Dashboard/authWrapper";
@@ -44,12 +44,12 @@ const router = createBrowserRouter([
       {
         path: "plants/:plantId/*",
         element: <Plant />,
-        loader:({params})=> recordsLoader(params.plantId),
+        // loader:({params})=> recordsLoader(params.plantId),
         children: [
           {
             path: "ai/:recordId",
             element: <AI />,
-            loader: ({params}) => recordLoader(params.plantId, params.recordId),
+            // loader: ({params}) => recordLoader(params.plantId, params.recordId),
           },
         ],
       },

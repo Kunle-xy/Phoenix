@@ -65,4 +65,17 @@ export const createPlant = async ({ formData, token }) => {
 
 
 
+export async function getRecords(plantId, token) { // Token is passed as an argument
+      const response = await axios.get(`http://127.0.0.1:8000/api/record/${plantId}/`, {
+          headers: {
+              Authorization: `Bearer ${token}` // Use the token passed as an argument
+          }
+      });
+
+      return response.data;
+}
+
+
+
+
 

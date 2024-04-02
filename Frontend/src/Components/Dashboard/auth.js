@@ -25,18 +25,20 @@ const isAuthenticated = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
     // console.log(accessToken);
 
+
+    let response = { isAuthenticated: false, token: null };
     // Attempt to get a new access token with the refresh token if the access token is missing
     if (!accessToken && refreshToken) {
       const success = await requestNewAccessToken(refreshToken);
       if (!success) {
-        return false; // Couldn't get a new access token; user is not authenticated
+        return response; // Couldn't get a new access token; user is not authenticated
       }
       // Update accessToken with the new value from localStorage
       accessToken = localStorage.getItem('accessToken');
     }
 
     if (!accessToken) {
-      return false; // No access token and refresh token flow failed or was not needed
+      return response; // No access token and refresh token flow failed or was not needed
     }
 
     try {
@@ -45,12 +47,19 @@ const isAuthenticated = async () => {
       if (decoded.exp < currentTime) {
         // Access token has expired, attempt to refresh it
         const success = await requestNewAccessToken(refreshToken);
-        return success; // The result of attempting to refresh the token
+        if (!success) {
+          return response; // Couldn't refresh the access token; user is not authenticated
       }
-      return true; // Access token is valid and not expired
+      // If refresh was successful, update accessToken
+      accessToken = localStorage.getItem('accessToken');
+      }
+      // At this point, the user is authenticated, update the response accordingly
+      response.isAuthenticated = true;
+      response.token = accessToken;
+      return response;// Access token is valid and not expired
     } catch (error) {
       console.error("Couldn't decode the access token:", error);
-      return false; // Token decoding failed, treat the user as not authenticated
+      return response; // Token decoding failed, treat the user as not authenticated
     }
   };
 

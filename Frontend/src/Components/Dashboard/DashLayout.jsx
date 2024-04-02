@@ -7,6 +7,7 @@ import { IoLogOutSharp } from "react-icons/io5";
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Fetch, createPlant } from '.';
 import { AiFillWechat } from "react-icons/ai";
+import { useAuth } from './AuthContext';
 
 
 const DashLayout = () => {
@@ -28,9 +29,10 @@ const DashLayout = () => {
   };
 
   const [profileClick, setProfileClick] = useState(false);
-  const token = localStorage.getItem('accessToken');
+  const { authStatus } = useAuth();
 
-  // console.log(token);
+  const token = authStatus.token;
+
   let initial = '';
   let name = '';
   let email = '';
@@ -80,7 +82,7 @@ const DashLayout = () => {
   const [fetchClick, setFetchClick] = useState(false);
 
   // const [shouldFetch, setShouldFetch] = useState(false);
-  const { data:plants, error, isLoading, isError } = useQuery(
+  const { data:plants,  isLoading, isError } = useQuery(
     ['plants', { token }],
     Fetch,
     {

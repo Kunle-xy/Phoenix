@@ -6,10 +6,11 @@ const AuthContext = createContext();
 
 // Provider component
 export const AuthProvider = ({ children }) => {
-  const [authStatus, setAuthStatus] = useState({ checked: false, isAuthenticated: false });
+  const [authStatus, setAuthStatus] = useState({ checked: false, isAuthenticated: false, token: '' });
   const checkAuth = async () => {
     const authResult = await isAuthenticated();
-    setAuthStatus({ checked: true, isAuthenticated: authResult });
+
+    setAuthStatus({ checked: true, isAuthenticated: authResult.isAuthenticated, token: authResult.token});
     return authResult;
   };
 
