@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.exceptions import NotFound
 
 
 from rest_framework.permissions import AllowAny
@@ -68,6 +69,28 @@ class RetrievePlantView(generics.RetrieveAPIView):
         print(id)
         return Plant.objects.get(id=id)
         # print(qs)
+
+class RetrieveUpdateRecordView(generics.RetrieveUpdateAPIView):
+    serializer_class = RecordSerializer
+    permission_classes = []
+    authentication_classes  = []
+
+    def get_object(self):
+        id = self.kwargs['pk']
+
+        try:
+            return Record.objects.get(id=id)
+        except Record.DoesNotExist:
+            raise NotFound(detail="Record not found", code=404)
+
+    def update(self, request, *args, **kwargs):
+        if len(request.data.get('image')) == 0:
+            request.data._mutable = True
+            #replace image with initial image
+            request.data['image'] = Record.objects.get(id=self.kwargs['pk']).image
+            request.data._mutable = False
+
+        return super().update(request, *args, **kwargs)
 
 
 class RecordDeleteView(generics.DestroyAPIView):

@@ -13,6 +13,8 @@ const AI = () => {
         const { data: record, isLoading, error } = useQuery(['record', plantId, recordId], () => getRecord(plantId, recordId, authStatus.token), {
         enabled: !!plantId && !!recordId && !!authStatus.token // Only fetch if all IDs and token are available
         });
+
+
         useEffect(() => {
                 return () => {
                     // Remove or invalidate the query cache when the component unmounts
@@ -29,6 +31,7 @@ const AI = () => {
 
   return (
     <div className=" h-[800px] overflow-y-auto text-black flex flex-col space-y-1 bg-gray-300 w-[500px] font-bold m-10 shadow-[50px] rounded-[50px] p-10 ">
+        <p>{record.image}</p>
             <img src={record.image} alt="" className="rounded-xl w-[400px] h-[300px] self-center" />
             <p className="self-center text-xl">Pie Chart:</p>
          <img src={image.image} alt="" className="rounded-xl w-[400px] h-[400px] self-center object-contain" />

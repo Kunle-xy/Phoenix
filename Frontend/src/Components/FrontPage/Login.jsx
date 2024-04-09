@@ -69,6 +69,7 @@ const Login = () => {
           className='h-10 w-60 rounded-xl border-2 border-gray-300 p-3 font-normal'
           id='email'
           value={email}
+          autoComplete='email'
           onChange={(e) => setEmail(e.target.value)}
           required
         />
@@ -80,6 +81,7 @@ const Login = () => {
           className='h-10 w-60 rounded-xl border-2 border-gray-300 p-3 font-normal'
           id='password'
           value={password}
+          autoComplete='current-password'
           onChange={(e) => setPassword(e.target.value)}
           required
         />

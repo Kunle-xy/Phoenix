@@ -1,5 +1,5 @@
-import {  useParams } from 'react-router-dom'
-import { Outlet, NavLink } from 'react-router-dom'
+import {  Link, useParams } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 // import { getRecords } from './Loader';
 import { useAuth } from './AuthContext';
 import {  useQuery, useQueryClient } from 'react-query';
@@ -10,24 +10,33 @@ import { useEffect } from 'react';
 
 const Plant = () => {
     // const { records } = useLoaderData();
-    const { authStatus } = useAuth();
+    const { authStatus, setRecords } = useAuth();
     let plantId = useParams().plantId;
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { data:records, isLoading } = useQuery(['records', plantId], () => getRecords(plantId, authStatus.token), {
         // Optional: React Query settings such as refetch intervals, stale time, etc.
         enabled: !!authStatus.token // Only run query if token exists
     });
 
+    const handleClick = () => {
+
+        console.log(records[0]);
+        //setRecords(records[0]);
+        navigate(`/dashboard/recordform/${plantId}`);
+       // navigate('/')
+    };
+
     useEffect(() => {
         return () => {
             // This function is called when the component unmounts
             // Here you can either remove the query data from the cache or invalidate it
             // To remove the query data
-            queryClient.removeQueries(['records', plantId]);
+            // queryClient.removeQueries(['records', plantId]);
 
             // Alternatively, to invalidate the query and refetch it later if needed
-            // queryClient.invalidateQueries(['records', plantId]);
+            queryClient.invalidateQueries(['records', plantId]);
         };
     }, [plantId, queryClient]);
 
@@ -60,7 +69,10 @@ const Plant = () => {
                             <p>Humidity: {record.humidity}%</p>
                         </div>
                         <div className='flex justify-center items-center gap-2'>
-                            <button className='bg-green-200 p-2 rounded-lg px-5 font-semibold'>Edit</button>
+
+                            <button onClick={handleClick} className='bg-green-200 p-2 rounded-lg px-5 font-semibold'>Edit</button>
+
+
                             <button  className='bg-red-400 p-2 rounded-lg px-5 font-semibold'>Delete</button>
                             <NavLink to={`ai/${record.id}`}
 

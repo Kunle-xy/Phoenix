@@ -8,10 +8,13 @@ class PlantSerializer(serializers.ModelSerializer):
         model = Plant
         fields = '__all__'
 
+from rest_framework import serializers
+
 class RecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Record
-        fields = ['id', 'plantName', 'date', 'height', 'temperature', 'humidity', 'soilMoisture', 'image', 'plant']
+        fields = '__all__'
+
 
 
 #user serializer

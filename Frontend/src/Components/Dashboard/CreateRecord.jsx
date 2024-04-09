@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom'
 import { useAuth } from "./AuthContext";
 
@@ -8,7 +8,12 @@ import { useAuth } from "./AuthContext";
 const CreateRecord = () => {
   const { plantId } = useParams();
   const [success, setSuccess] = useState(false);
-  const { authStatus } = useAuth();
+  const { authStatus, records } = useAuth();
+
+  useEffect(() => {
+    console.log(records);
+  }
+  , [records]);
 
 
   const Init = {

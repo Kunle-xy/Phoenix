@@ -7,6 +7,8 @@ const AuthContext = createContext();
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [authStatus, setAuthStatus] = useState({ checked: false, isAuthenticated: false, token: '' });
+  const [records, setRecords] = useState([{}]);
+
   const checkAuth = async () => {
     const authResult = await isAuthenticated();
 
@@ -19,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authStatus, setAuthStatus, checkAuth }}>
+    <AuthContext.Provider value={{ authStatus, setAuthStatus, checkAuth, setRecords, records }}>
       {children}
     </AuthContext.Provider>
   );

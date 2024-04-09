@@ -21,26 +21,29 @@ export const Data = [
 
     },
     {
-        id: 7,
+        id: 10,
         image: image_12_13,
 
     },
     {
-        id: 8,
+        id: 11,
         image: image_12_14,
 
     },
     {
-        id: 9,
+        id: 12,
         image: image_23_15,
 
     },
     {
-        id: 10,
+        id: 13,
         image: image_24_16,
 
     },
 ]
+
+
+
 
 export const Fetch = async ({ queryKey }) => {
     const [_key, { token }] = queryKey;

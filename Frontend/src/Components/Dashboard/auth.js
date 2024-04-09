@@ -8,7 +8,7 @@ const requestNewAccessToken = async (refreshToken) => {
         refresh: refreshToken,
       });
 
-      const { access } = response.data;
+      const {access}  = response.data;
       localStorage.setItem('accessToken', access);
       return true; // New access token was successfully obtained
     } catch (error) {
@@ -23,7 +23,7 @@ const requestNewAccessToken = async (refreshToken) => {
 const isAuthenticated = async () => {
     let accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
-    // console.log(accessToken);
+
 
 
     let response = { isAuthenticated: false, token: null };
@@ -31,6 +31,7 @@ const isAuthenticated = async () => {
     if (!accessToken && refreshToken) {
       const success = await requestNewAccessToken(refreshToken);
       if (!success) {
+
         return response; // Couldn't get a new access token; user is not authenticated
       }
       // Update accessToken with the new value from localStorage
@@ -48,6 +49,7 @@ const isAuthenticated = async () => {
         // Access token has expired, attempt to refresh it
         const success = await requestNewAccessToken(refreshToken);
         if (!success) {
+
           return response; // Couldn't refresh the access token; user is not authenticated
       }
       // If refresh was successful, update accessToken
